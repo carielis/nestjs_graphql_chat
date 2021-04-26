@@ -1,0 +1,24 @@
+type Message {
+    messageId: String
+    create_at: String
+    text_message: String
+    send_by: String
+}
+
+type Send_By {
+    login: String
+    userId: String
+}
+
+type Query {
+    getMessage: [Message]
+}
+
+type Mutation {
+    createMessage(message: String): Message
+}
+
+type Subscription {
+    wathMessage: [Message]
+   
+}
