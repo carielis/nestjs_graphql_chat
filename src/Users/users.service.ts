@@ -16,12 +16,12 @@ export class UsersService {
     return this.repository.find();
   }
   
-  async getByLogin(loged) {
-    const user =  await this.repository.findOne({login: loged})
+  async getByLogin(login) {
+    const user =  await this.repository.findOne({login})
     if(user) {
       return user
     }
-   
+    throw new HttpException('User not found [Get by login]', HttpStatus.NOT_FOUND)
   }
 
   async removeUser(login) {
@@ -30,14 +30,15 @@ export class UsersService {
       await this.repository.remove(user)
       return user
     }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    
+    throw new HttpException('User not found [Remove]', HttpStatus.NOT_FOUND);
   }
 
   async createUser(user) {
     const salt = await bcrypt.genSaltSync(10);
     const hash = await bcrypt.hashSync(user.password, salt);
-    const checkOnLogin = await this.getByLogin(user.login)
-    if(!checkOnLogin) {
+    const reservedName = this.getByLogin(user.login)
+    if(!reservedName) {
       const createUser = this.repository.create({login: user.login, password: hash });
       await  this.repository.save(createUser);
       return  createUser;
