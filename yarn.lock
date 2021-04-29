@@ -1539,6 +1539,13 @@
   "resolved" "https://registry.npmjs.org/@types/cors/-/cors-2.8.10.tgz"
   "version" "2.8.10"
 
+"@types/engine.io@*":
+  "integrity" "sha512-DLVpLEGTEZGBXOYoYoagHSxXkDHONc0fZouF2ayw7Q18aRu1Afwci+1CFKvPpouCUOVWP+dmCaAWpQjswe7kpg=="
+  "resolved" "https://registry.npmjs.org/@types/engine.io/-/engine.io-3.1.5.tgz"
+  "version" "3.1.5"
+  dependencies:
+    "@types/node" "*"
+
 "@types/eslint-scope@^3.7.0":
   "integrity" "sha512-O/ql2+rrCUe2W2rs7wMR+GqPRcgB6UiqN5RhrR5xruFlY7l9YLMn0ZkDzjoHLeiFkR8MCQZVudUuuvQ2BLC9Qw=="
   "resolved" "https://registry.npmjs.org/@types/eslint-scope/-/eslint-scope-3.7.0.tgz"
@@ -1787,6 +1794,22 @@
   dependencies:
     "@types/mime" "^1"
     "@types/node" "*"
+
+"@types/socket.io-parser@*":
+  "integrity" "sha512-+JNb+7N7tSINyXPxAJb62+NcpC1x/fPn7z818W4xeNCdPTp6VsO/X8fCsg6+ug4a56m1v9sEiTIIUKVupcHOFQ=="
+  "resolved" "https://registry.npmjs.org/@types/socket.io-parser/-/socket.io-parser-2.2.1.tgz"
+  "version" "2.2.1"
+  dependencies:
+    "@types/node" "*"
+
+"@types/socket.io@^2.1.13":
+  "integrity" "sha512-JRgH3nCgsWel4OPANkhH8TelpXvacAJ9VeryjuqCDiaVDMpLysd6sbt0dr6Z15pqH3p2YpOT3T1C5vQ+O/7uyg=="
+  "resolved" "https://registry.npmjs.org/@types/socket.io/-/socket.io-2.1.13.tgz"
+  "version" "2.1.13"
+  dependencies:
+    "@types/engine.io" "*"
+    "@types/node" "*"
+    "@types/socket.io-parser" "*"
 
 "@types/stack-utils@^2.0.0":
   "integrity" "sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw=="

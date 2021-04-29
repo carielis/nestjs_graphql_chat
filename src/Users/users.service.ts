@@ -16,37 +16,20 @@ export class UsersService {
     return this.repository.find();
   }
   
-  async getByLogin(login) {
-    const user =  await this.repository.findOne({login})
-    if(user) {
-      return user
-    }
-    throw new HttpException('User not found [Get by login]', HttpStatus.NOT_FOUND)
+  async getByLogin(login) : Promise<UserEntity> {
+    return this.repository.findOne({login})
   }
 
-  async removeUser(login) {
-    const user = await this.getByLogin(login)
-    if(user) {
-      await this.repository.remove(user)
-      return user
+  async createUser(user) : Promise<any> {
+    const {login, password} = user
+    const salt = bcrypt.genSaltSync(10);
+    const hashPassword = bcrypt.hashSync(password,salt)
+    const checkOnReservedLogin = await this.repository.findOne({login})
+    if (!checkOnReservedLogin) {
+      const create = this.repository.create({login,password: hashPassword})
+      return this.repository.save(create)
     }
-    
-    throw new HttpException('User not found [Remove]', HttpStatus.NOT_FOUND);
+    throw new HttpException('Login reserved', HttpStatus.BAD_REQUEST)
   }
 
-  async createUser(user) {
-    const salt = await bcrypt.genSaltSync(10);
-    const hash = await bcrypt.hashSync(user.password, salt);
-    const reservedName = this.getByLogin(user.login)
-    if(!reservedName) {
-      const createUser = this.repository.create({login: user.login, password: hash });
-      await  this.repository.save(createUser);
-      return  createUser;
-    }
-     throw new HttpException('Username reserved', HttpStatus.BAD_REQUEST);
-  }
-
-  createToken({login, userId}: UserEntity) {
-    return jwt.sign({login, userId}, "Brave")
-  }
 }
