@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BaseEntity } from "typeorm";
 
 @Entity()
-export class MessageEntity {
+export class MessageEntity extends BaseEntity {
+  
   @PrimaryGeneratedColumn("uuid")
   messageId: string;
 

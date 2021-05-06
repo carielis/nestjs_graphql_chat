@@ -1,48 +1,35 @@
-/* eslint-disable prettier/prettier */
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-  OnGatewayConnection,
-  MessageBody,
-} from "@nestjs/websockets";
-import { Body, Logger, Request, UseGuards, ValidationPipe } from "@nestjs/common";
-import { Server } from "socket.io";
-import { MessageEntity } from "src/Entity/message.entity";
-import { JwtAuthGuard } from "src/Auth/jwt-auth.guard";
-import { MessageRepository } from "./message.repository";
+import { CreateMessageDto } from './createMessageDto.dto';
+import { ValidationPipe } from '@nestjs/common';
+import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { MessageRepository } from './message.repository';
+import { Server } from 'socket.io';
+import { Body } from '@nestjs/common';
+@WebSocketGateway(4000)
+export class ChatGateWay implements OnGatewayConnection {
+  constructor(
+    private msgRepository : MessageRepository
+  ) {}
 
-@WebSocketGateway(4001)
-export class MessageGateway
-  implements OnGatewayConnection{
+  @WebSocketServer()
+  server: Server;
 
-    constructor(
-        private repository : MessageRepository,
-    ) {}
+  async handleConnection() {
+    const messages = await this.getMessages()
+      this.server.emit('init', messages)
+  }
 
-    @WebSocketServer()
-    server: Server;
+  @SubscribeMessage('create')
+  async createMessage(
+    @Body(ValidationPipe) @MessageBody() data: CreateMessageDto) {
+      const author = data.send_by
 
-  
-    async handleConnection() {
-        const messages = await this.getMessages();
-        this.server.emit('init', messages);
-      }
+      await this.msgRepository.createMessage({send_by: author, text_message : data.text_message})
 
-      @SubscribeMessage('create')
-      async createMessage(
-       
-        @Body(ValidationPipe) @MessageBody() data: any,
-      ) {
-            await this.repository.createMessage(data)
-            const messages = await this.getMessages()
-            this.server.emit('init', messages);
-      }
+      const messages = await this.getMessages()
+      this.server.emit('init', messages)
+    }
 
-      async getMessages(): Promise<MessageEntity[]> {
-          const messages = await this.repository.find()
-          return await messages.map(message => {
-              return message
-          })
-      }
+    async getMessages() {
+      return this.msgRepository.find()
+    }
 }

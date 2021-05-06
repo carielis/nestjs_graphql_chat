@@ -1,18 +1,18 @@
-/* eslint-disable prettier/prettier */
 import { MessageEntity } from "src/Entity/message.entity";
+import { CreateMessageDto } from './createMessageDto.dto';
 import { Repository, EntityRepository } from "typeorm";
 
 @EntityRepository(MessageEntity)
 export class MessageRepository extends Repository<MessageEntity> {
-  async createMessage(data: any): Promise<any> {
-    const { send, text } = data;
+  async createMessage(createMessage: CreateMessageDto): Promise<MessageEntity> {
+    const { send_by, text_message } = createMessage;
 
     const message = this.create()
 
-    message.send_by = send
-    message.text_message = text
+    message.send_by = send_by
+    message.text_message = text_message
 
-    await this.save(message)
+    await message.save()
 
     return message;
   }
